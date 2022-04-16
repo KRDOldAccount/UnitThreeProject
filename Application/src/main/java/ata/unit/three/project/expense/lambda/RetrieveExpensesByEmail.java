@@ -1,5 +1,8 @@
 package ata.unit.three.project.expense.lambda;
 
+import ata.unit.three.project.App;
+import ata.unit.three.project.expense.dynamodb.ExpenseItem;
+import ata.unit.three.project.expense.service.ExpenseService;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -11,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ExcludeFromJacocoGeneratedReport
@@ -36,6 +40,8 @@ public class RetrieveExpensesByEmail
         String email = input.getQueryStringParameters().get("email");
 
         // Your Code Here
+        ExpenseService expenseService = App.expenseService();
+        List<ExpenseItem> items = expenseService.getExpensesByEmail(email);
 
         return response
                 .withStatusCode(200);

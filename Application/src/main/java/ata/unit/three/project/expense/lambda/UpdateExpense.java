@@ -1,5 +1,9 @@
 package ata.unit.three.project.expense.lambda;
 
+import ata.unit.three.project.App;
+import ata.unit.three.project.expense.dynamodb.ExpenseItem;
+import ata.unit.three.project.expense.lambda.models.Expense;
+import ata.unit.three.project.expense.service.ExpenseService;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -9,6 +13,8 @@ import com.google.gson.GsonBuilder;
 import com.kenzie.ata.ExcludeFromJacocoGeneratedReport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 @ExcludeFromJacocoGeneratedReport
 public class UpdateExpense implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
@@ -27,6 +33,9 @@ public class UpdateExpense implements RequestHandler<APIGatewayProxyRequestEvent
         String expenseId = input.getPathParameters().get("expenseId");
 
         // Your Code Here
+        ExpenseService expenseService = App.expenseService();
+        Expense expense = gson.fromJson(input.getBody(), Expense.class);
+        expenseService.updateExpense(expenseId, expense);
 
         return response
                 .withStatusCode(200);
