@@ -3,6 +3,8 @@ package ata.unit.three.project.expense.lambda;
 import ata.unit.three.project.expense.service.DaggerExpenseServiceComponent;
 import ata.unit.three.project.expense.service.ExpenseService;
 import ata.unit.three.project.expense.service.ExpenseServiceComponent;
+import ata.unit.three.project.expense.service.exceptions.InvalidDataException;
+import ata.unit.three.project.expense.service.exceptions.ItemNotFoundException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -12,6 +14,8 @@ import com.google.gson.GsonBuilder;
 import com.kenzie.ata.ExcludeFromJacocoGeneratedReport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 @ExcludeFromJacocoGeneratedReport
 public class RemoveExpenseItemFromList
@@ -31,9 +35,27 @@ public class RemoveExpenseItemFromList
         ExpenseServiceComponent dagger = DaggerExpenseServiceComponent.create();
         ExpenseService expenseService = dagger.expenseService();
 
-        // Your Code Here
+        Map<String, String> expenseMap = gson.fromJson(input.getBody(), Map.class);
+        String expenseListId = expenseMap.get("expenseListId");
+        String expenseItemId = expenseMap.get("expenseItemId");
 
+        // Your Code Here...
+
+        try {
+            expenseService.removeExpenseItemToList(expenseListId, expenseItemId);
+
+        }
+        catch (ItemNotFoundException e) {
+            return response
+                    .withStatusCode(400)
+                    .withBody(gson.toJson(e.errorPayload()));
+        }
+        catch (InvalidDataException e) {
+            return response
+                    .withStatusCode(400)
+                    .withBody(gson.toJson(e.errorPayload()));
+        }
         return response
-                .withStatusCode(200);
+                .withStatusCode(204);
     }
 }
