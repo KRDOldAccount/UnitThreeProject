@@ -644,6 +644,43 @@ class ExpenseServiceTest {
 
     }
 
+    @Test
+    void add_item_to_list_unhappy_seven() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = "bob";
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(InvalidDataException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
     // Write additional tests here
 
     /** ------------------------------------------------------------------------
@@ -902,6 +939,43 @@ class ExpenseServiceTest {
 //        expenseService.removeExpenseItemToList(id, expenseId);
 
         assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_seven() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = "bob";
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(InvalidDataException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
                 "invalid data exception - no exception thrown");
 
 //        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
