@@ -5,6 +5,7 @@ import ata.unit.three.project.expense.dynamodb.ExpenseItemList;
 import ata.unit.three.project.expense.dynamodb.ExpenseServiceRepository;
 import ata.unit.three.project.expense.lambda.models.Expense;
 import ata.unit.three.project.expense.service.exceptions.InvalidDataException;
+import ata.unit.three.project.expense.service.exceptions.InvalidExpenseException;
 import ata.unit.three.project.expense.service.exceptions.ItemNotFoundException;
 import ata.unit.three.project.expense.service.model.ExpenseItemConverter;
 
@@ -76,10 +77,53 @@ public class ExpenseService {
 
     public void addExpenseItemToList(String id, String expenseId) {
         // Your Code Here
+        if(id == null) {
+            throw new ItemNotFoundException("no expenseList id found");
+        }
+        if(expenseId == null){
+            throw new ItemNotFoundException("no expense id found");
+        }
+        if(StringUtils.isEmpty(id) || StringUtils.isEmpty(expenseId) || isInvalidUuid(id) || isInvalidUuid(expenseId)) {
+            throw new InvalidDataException("invalid inputs on either id");
+        }
+
+        ExpenseItem expenseItem = expenseServiceRepository.getExpenseById(expenseId);
+        ExpenseItemList expenseItemList = expenseServiceRepository.getExpenseListById(id);
+
+        //check if expenseItem exists
+        if(expenseItem == null) {
+            throw new ItemNotFoundException("no expenseList id found");
+        }
+        if(expenseItemList == null) {
+            throw new ItemNotFoundException("No expenseItemList found given an expenseList id");
+        }
+        //check email match
+        if(!expenseItem.getEmail().equals(expenseItemList.getEmail())) {
+            throw new ItemNotFoundException("Email doesn't match");
+        }
+        //check if expense id in expenseIdList
+        //check if expenseItemList is null
+        if(expenseItemList.getExpenseItems() != null && expenseItemList.getExpenseItems().contains(expenseItem)) {
+            throw new ItemNotFoundException("Already in list");
+        }
+
+        expenseServiceRepository.addExpenseItemToList(id, expenseItem);
     }
 
-    public void removeExpenseItemFromList(String id, String expenseId) {
+    public void removeExpenseItemToList(String id, String expenseId) {
         // Your Code Here
+        if(isInvalidUuid(id) || isInvalidUuid(expenseId)) {
+            throw new InvalidDataException("Expense Id is invalid | Expense Item List Id is invalid");
+        }
+        if(id == null || expenseId == null) {
+            throw new InvalidExpenseException("Expense Id | Expense List is null");
+        }
+        ExpenseItem expenseItem = expenseServiceRepository.getExpenseById(expenseId);
+        ExpenseItemList expenseItemList = expenseServiceRepository.getExpenseListById(id);
+        if(!expenseItem.getEmail().equals(expenseItemList.getEmail())) {
+            throw new InvalidExpenseException("Emails do not match");
+        }
+        expenseServiceRepository.removeExpenseItemToList(expenseItemList.getId(), expenseItem);
     }
 
     public List<ExpenseItemList> getExpenseListByEmail(String email) {

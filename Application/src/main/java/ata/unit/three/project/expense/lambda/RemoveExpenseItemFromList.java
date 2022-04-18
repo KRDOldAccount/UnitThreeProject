@@ -1,5 +1,8 @@
 package ata.unit.three.project.expense.lambda;
 
+import ata.unit.three.project.expense.service.DaggerExpenseServiceComponent;
+import ata.unit.three.project.expense.service.ExpenseService;
+import ata.unit.three.project.expense.service.ExpenseServiceComponent;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -24,6 +27,9 @@ public class RemoveExpenseItemFromList
         log.info(gson.toJson(input));
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+
+        ExpenseServiceComponent dagger = DaggerExpenseServiceComponent.create();
+        ExpenseService expenseService = dagger.expenseService();
 
         // Your Code Here
 

@@ -55,6 +55,34 @@ class ExpenseServiceTest {
         Assertions.assertEquals(returnedExpenseItem.getExpenseDate(), expenseItem.getExpenseDate());
     }
 
+    @Test
+    void create_expense() {
+        //GIVEN
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        String testTitle = mockNeat.strings().val();
+        expenseItem.setTitle(testTitle);
+        Double amount = new Double(0.0);
+
+
+        Expense expense = new Expense(email, testTitle, amount);
+
+        //WHEN
+        when(expenseItemConverter.convert(expense)).thenReturn(expenseItem);
+
+        //THEN
+        String returnedExpenseItem = expenseService.createExpense(expense);
+        assertEquals(id, returnedExpenseItem, "These should have matched");
+    }
+
     // Write additional tests here
 
     /** ------------------------------------------------------------------------

@@ -1,8 +1,10 @@
 package ata.unit.three.project.expense.lambda;
 
-import ata.unit.three.project.App;
 import ata.unit.three.project.expense.dynamodb.ExpenseItem;
+import ata.unit.three.project.expense.service.DaggerExpenseServiceComponent;
 import ata.unit.three.project.expense.service.ExpenseService;
+import ata.unit.three.project.expense.service.ExpenseServiceComponent;
+import ata.unit.three.project.expense.service.exceptions.InvalidDataException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -39,11 +41,24 @@ public class RetrieveExpensesByEmail
 
         String email = input.getQueryStringParameters().get("email");
 
+        ExpenseServiceComponent dagger = DaggerExpenseServiceComponent.create();
+        ExpenseService expenseService = dagger.expenseService();
+
         // Your Code Here
-        ExpenseService expenseService = App.expenseService();
+        try {
+//        ExpenseService expenseService = App.expenseService();
         List<ExpenseItem> items = expenseService.getExpensesByEmail(email);
 
-        return response
-                .withStatusCode(200);
+            String output = gson.toJson(items);
+
+            return response
+                    .withStatusCode(200)
+                    .withBody(output);
+
+        } catch (InvalidDataException e) {
+            return response
+                    .withStatusCode(400)
+                    .withBody(gson.toJson(e.errorPayload()));
+        }
     }
 }
