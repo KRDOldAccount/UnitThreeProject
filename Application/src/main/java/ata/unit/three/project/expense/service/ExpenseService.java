@@ -11,6 +11,9 @@ import ata.unit.three.project.expense.service.model.ExpenseItemConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -150,7 +153,13 @@ public class ExpenseService {
         if (StringUtils.isEmpty(email)) {
             throw new InvalidDataException("Email is not present");
         }
-        return expenseServiceRepository.getExpenseListsByEmail(email);
+        Comparator<ExpenseItem> expenseItemComparator = new ExpenseItemComparator();
+        List<ExpenseItemList> sortList = expenseServiceRepository.getExpenseListsByEmail(email);
+        for (ExpenseItemList sortListItems : sortList) {
+            Collections.sort(sortListItems.getExpenseItems(), expenseItemComparator);
+        }
+
+        return sortList;
     }
 
     private boolean isInvalidUuid(String uuid) {
@@ -160,5 +169,16 @@ public class ExpenseService {
             return true;
         }
         return false;
+    }
+
+    public class ExpenseItemComparator implements Comparator<ExpenseItem> {
+
+        @Override
+        public int compare(ExpenseItem o1, ExpenseItem o2) {
+            Instant expenseItemTest1 = Instant.parse(o1.getExpenseDate());
+            Instant expenseItemTest2 = Instant.parse(o2.getExpenseDate());
+
+            return expenseItemTest1.compareTo(expenseItemTest2);
+        }
     }
 }
