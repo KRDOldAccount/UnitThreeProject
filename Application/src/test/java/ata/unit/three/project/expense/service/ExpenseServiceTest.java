@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.*;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyString;
@@ -385,6 +386,263 @@ class ExpenseServiceTest {
     /** ------------------------------------------------------------------------
      *  expenseService.addExpenseItemToList
      *  ------------------------------------------------------------------------ **/
+    @Test
+    void add_item_to_list_happy() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+        expenseService.addExpenseItemToList(id, expenseId);
+
+        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_one() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = null;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_two() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = null;
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_three() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = null;
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+//        expenseItem.setId(id);
+//        expenseItem.setEmail(email);
+//        expenseItem.setExpenseDate(Instant.now().toString());
+//        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_four() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = null;
+        String expenseListId = mockNeat.strings().val();
+//        expenseItemList.setEmail(email);
+//        expenseItemList.setTitle(mockNeat.strings().val());
+//        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_five() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        String diffEmail = "bob";
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(diffEmail);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.addExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).addExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void add_item_to_list_unhappy_six() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+//        ExpenseItem diffExpenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.addExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
 
     // Write additional tests here
 
@@ -393,10 +651,262 @@ class ExpenseServiceTest {
      *  ------------------------------------------------------------------------ **/
     @Test
     void remove_item_from_list_happy() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+        expenseService.removeExpenseItemToList(id, expenseId);
+
+        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
 
     }
 
     // Write additional tests here
+    @Test
+    void remove_item_from_list_unhappy_one() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = null;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_two() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = null;
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_three() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = null;
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+//        expenseItem.setId(id);
+//        expenseItem.setEmail(email);
+//        expenseItem.setExpenseDate(Instant.now().toString());
+//        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_four() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = null;
+        String expenseListId = mockNeat.strings().val();
+//        expenseItemList.setEmail(email);
+//        expenseItemList.setTitle(mockNeat.strings().val());
+//        expenseItemList.setId(expenseListId);
+//        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+//        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_five() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+        String diffEmail = "bob";
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(diffEmail);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
+
+    @Test
+    void remove_item_from_list_unhappy_six() {
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        ExpenseItem diffExpenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();;
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+        String expenseId = UUID.randomUUID().toString();
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(diffExpenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        when(expenseServiceRepository.getExpenseById(expenseId)).thenReturn(expenseItem);
+        when(expenseServiceRepository.getExpenseListById(id)).thenReturn(expenseItemList);
+
+        //THEN
+//        expenseService.removeExpenseItemToList(id, expenseId);
+
+        assertThrows(ItemNotFoundException.class, () -> expenseService.removeExpenseItemToList(id, expenseId), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+
+//        verify(expenseServiceRepository).removeExpenseItemToList(id, expenseItem);
+
+    }
 
     /** ------------------------------------------------------------------------
      *  expenseService.getExpenseListByEmail
@@ -462,6 +972,36 @@ class ExpenseServiceTest {
 
         assertThrows(InvalidDataException.class, () -> expenseService.getExpenseListByEmail(email), "Expected to throw" +
                 "invalid data exception - no exception thrown");
+    }
+
+    @Test
+    void create_expense_list() {
+        //GIVEN
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = mockNeat.emails().val();
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        String title = mockNeat.strings().val();
+        expenseItem.setTitle(title);
+        Double amount = new Double(0.0);
+        String expenseListId = "c5156c9f-4306-45b6-9b39-2eeb180a702a";
+
+
+        Expense expense = new Expense(email, title, amount);
+
+        //WHEN
+//        when(expenseServiceRepository.createExpenseList()).thenReturn(expenseListId, email, testTitle);
+
+        expenseService.createExpenseList(email, title);
+
+        //THEN
+        verify(expenseServiceRepository).createExpenseList(expenseListId, email, title);
     }
 
 }

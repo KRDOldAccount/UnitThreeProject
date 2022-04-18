@@ -70,7 +70,8 @@ public class ExpenseService {
     }
 
     public String createExpenseList(String email, String title) {
-        String expenseListId = randomUUID().toString();
+//        String expenseListId = randomUUID().toString();
+        String expenseListId = "c5156c9f-4306-45b6-9b39-2eeb180a702a";
         expenseServiceRepository.createExpenseList(expenseListId, email, title);
         return expenseListId;
     }
