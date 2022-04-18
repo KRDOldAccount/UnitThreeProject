@@ -1,3 +1,4 @@
+#!/bin/bash
 failures=0
 trap 'failures=$((failures+1))' ERR
 ./gradlew expensetracking-integration-task1

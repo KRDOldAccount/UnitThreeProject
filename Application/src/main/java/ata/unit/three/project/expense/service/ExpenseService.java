@@ -158,6 +158,7 @@ public class ExpenseService {
         for (ExpenseItemList sortListItems : sortList) {
             if(sortListItems.getExpenseItems() != null) {
                 Collections.sort(sortListItems.getExpenseItems(), expenseItemComparator);
+                Collections.reverse(sortListItems.getExpenseItems());
             }
         }
 
