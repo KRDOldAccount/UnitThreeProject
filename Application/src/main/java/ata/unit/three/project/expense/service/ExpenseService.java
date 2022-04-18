@@ -156,7 +156,9 @@ public class ExpenseService {
         Comparator<ExpenseItem> expenseItemComparator = new ExpenseItemComparator();
         List<ExpenseItemList> sortList = expenseServiceRepository.getExpenseListsByEmail(email);
         for (ExpenseItemList sortListItems : sortList) {
-            Collections.sort(sortListItems.getExpenseItems(), expenseItemComparator);
+            if(sortListItems.getExpenseItems() != null) {
+                Collections.sort(sortListItems.getExpenseItems(), expenseItemComparator);
+            }
         }
 
         return sortList;
