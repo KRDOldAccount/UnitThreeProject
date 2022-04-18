@@ -145,6 +145,13 @@ public class ExpenseService {
         expenseServiceRepository.removeExpenseItemToList(id, expenseItem);
     }
 
+    public List<ExpenseItemList> getExpenseListByEmail(String email) {
+        if (StringUtils.isEmpty(email)) {
+            throw new InvalidDataException("Email is not present");
+        }
+        return expenseServiceRepository.getExpenseListsByEmail(email);
+    }
+
     private boolean isInvalidUuid(String uuid) {
         try {
             fromString(uuid);

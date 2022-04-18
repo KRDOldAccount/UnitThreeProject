@@ -1,5 +1,6 @@
 package ata.unit.three.project.expense.lambda;
 
+import ata.unit.three.project.App;
 import ata.unit.three.project.expense.service.DaggerExpenseServiceComponent;
 import ata.unit.three.project.expense.service.ExpenseService;
 import ata.unit.three.project.expense.service.exceptions.InvalidDataException;

@@ -7,15 +7,13 @@ import ata.unit.three.project.expense.lambda.models.Expense;
 import ata.unit.three.project.expense.service.exceptions.InvalidDataException;
 import ata.unit.three.project.expense.service.exceptions.ItemNotFoundException;
 import ata.unit.three.project.expense.service.model.ExpenseItemConverter;
+import jdk.internal.foreign.Utils;
 import net.andreinc.mockneat.MockNeat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -393,6 +391,10 @@ class ExpenseServiceTest {
     /** ------------------------------------------------------------------------
      *  expenseService.removeExpenseItemFromList
      *  ------------------------------------------------------------------------ **/
+    @Test
+    void remove_item_from_list_happy() {
+
+    }
 
     // Write additional tests here
 
@@ -434,5 +436,32 @@ class ExpenseServiceTest {
     }
 
     // Write additional tests here
+    @Test
+    void get_expense_list_by_email_unhappy_case() {
+        //GIVEN
+        ExpenseServiceRepository expenseServiceRepository = mock(ExpenseServiceRepository.class);
+        ExpenseItemConverter expenseItemConverter = mock(ExpenseItemConverter.class);
+        ExpenseService expenseService = new ExpenseService(expenseServiceRepository, expenseItemConverter);
+
+        ExpenseItem expenseItem = new ExpenseItem();
+        String id = UUID.randomUUID().toString();
+        String email = "";
+        expenseItem.setId(id);
+        expenseItem.setEmail(email);
+        expenseItem.setExpenseDate(Instant.now().toString());
+        expenseItem.setTitle(mockNeat.strings().val());
+
+        //WHEN
+        ExpenseItemList expenseItemList = new ExpenseItemList();
+        String expenseListId = mockNeat.strings().val();
+        expenseItemList.setEmail(email);
+        expenseItemList.setTitle(mockNeat.strings().val());
+        expenseItemList.setId(expenseListId);
+        expenseItemList.setExpenseItems(Collections.singletonList(expenseItem));
+        List<ExpenseItemList> list = Collections.singletonList(expenseItemList);
+
+        assertThrows(InvalidDataException.class, () -> expenseService.getExpenseListByEmail(email), "Expected to throw" +
+                "invalid data exception - no exception thrown");
+    }
 
 }
