@@ -53,7 +53,7 @@ public class ExpenseService {
     }
 
     public void updateExpense(String expenseId, Expense updateExpense) {
-        if (StringUtils.isEmpty(expenseId) || isInvalidUuid(expenseId)) {
+        if (isInvalidUuid(expenseId)) {
             throw new InvalidDataException("Expense id is not present");
         }
         ExpenseItem item = expenseServiceRepository.getExpenseById(expenseId);
